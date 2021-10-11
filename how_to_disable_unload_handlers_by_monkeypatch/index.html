@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>How to disable unload handlers by monkey-patch.</title>
+    <script>
+    ['visibilitychange', 'pagehide', 'beforeunload'].forEach(
+      function(event_type) {
+        window.addEventListener(event_type, function() {
+          window.onunload = null;
+        });
+      }
+    );
+    if (!window.original_addEventListener) {
+      window.original_addEventListener = window.addEventListener;
+      function addEventListener_monkeypatch(event_type, handler, opt) {
+        // Ignore unload handler
+        if (event_type !== 'unload') {
+          this.original_addEventListener(event_type, handler, opt);
+        } else {
+          // We can also detect the usage of unload handlers.
+          console.trace('unload handlers were used');
+        }
+      }
+      window.addEventListener = addEventListener_monkeypatch;
+    }
+    </script>
+    <style>
+    body {background-color: #ffffcc;}
+    iframe {border-color: #000000;}
+    </style>
+  </head>
+  <body>
+    <div><a href="https://www.google.com/">Navigate to Google Search</a></div>
+    <script>
+    // The following code could be located in the 3rd party JavaScript library.
+    window.addEventListener('unload', function() {});
+    window.onunload = function() {};
+    </script>
+    <iframe src="iframe.html" width="200" height="150"></iframe>
+  </body>
+</html>
