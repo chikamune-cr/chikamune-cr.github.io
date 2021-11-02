@@ -4,15 +4,24 @@
     var pageshow_time = Date.now();
     window.addEventListener('pageshow', function() {
       pageshow_time = Date.now();
+      document.getElementById('timer').value = 60;
     });
     window.setInterval(function() {
       let milliseconds = Date.now() - pageshow_time;
       let minutes = (milliseconds / 60000).toFixed(3);
       document.getElementById('elapsed').textContent = 'elapsed: ' + minutes + ' min (' + milliseconds + ' ms)';
-    }, 10);
+      let timer = document.getElementById('timer').value;
+      if (milliseconds > 60 * 1000 * Number.parseFloat(timer)) {
+        window.history.back();
+      }
+    }, 50);
     </script>
   </head>
   <body>
     <div id="elapsed"></div>
+    <div>
+      Timer (minutes):
+      <input type="number" id="timer" placeholder="timer (minutes)" min="0" value="60">
+    </div>
   </body>
 </html>
