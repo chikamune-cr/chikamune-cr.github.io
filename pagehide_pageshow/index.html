@@ -1,15 +1,16 @@
 <html>
   <head>
     <script type="text/javascript">
-    var last = Date.now();
     window.addEventListener('pagehide', function() {
-      last = Date.now();
+      let last = Date.now();
+      localStorage.setItem('last', last.toString());
       let text = document.createTextNode('pagehide: ' + last.toString());
       let log = document.createElement('div');
       log.appendChild(text);
       document.getElementById('logs').appendChild(log);
     });
     window.addEventListener('pageshow', function() {
+      let last = Number.parseInt(localStorage.getItem('last') || '0');
       let duration = Date.now() - last;
       let text = document.createTextNode('pageshow: ' + duration);
       let log = document.createElement('div');
