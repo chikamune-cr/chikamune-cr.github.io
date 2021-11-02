@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <script type="text/javascript">
+    var last = Date.now();
+    window.addEventListener('pagehide', function() {
+      last = Date.now();
+      let text = document.createTextNode('pagehide: ' + last.toString());
+      let log = document.createElement('div');
+      log.appendChild(text);
+      document.getElementById('logs').appendChild(log);
+    });
+    window.addEventListener('pageshow', function() {
+      let duration = Date.now() - last;
+      let text = document.createTextNode('pageshow: ' + duration);
+      let log = document.createElement('div');
+      log.appendChild(text);
+      document.getElementById('logs').appendChild(log);
+    });
+    </script>
+  </head>
+  <body>
+    <div><a href="https://example.com/">Navigate to https://example.com/</a></div>
+    <div id="logs">
+    </div>
+  </body>
+</html>
