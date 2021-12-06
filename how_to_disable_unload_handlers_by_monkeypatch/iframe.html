@@ -2,17 +2,12 @@
   <head>
     <title>How to disable unload handlers by monkey-patch.</title>
     <script type="text/javascript">
-    ['visibilitychange', 'pagehide', 'beforeunload'].forEach(
-      function(event_type) {
-        window.addEventListener(event_type, function() {
-          window.onunload = null;
-        });
-      }
-    );
+    // Ignore window.onunload attribute.
+    Object.defineProperty(window, 'onunload', {set: function(handler) {}});
     if (!window.original_addEventListener) {
       window.original_addEventListener = window.addEventListener;
       function addEventListener_monkeypatch(event_type, handler, opt) {
-        // Ignore unload handler
+        // Ignore unload handler.
         if (event_type !== 'unload') {
           this.original_addEventListener(event_type, handler, opt);
         } else {
